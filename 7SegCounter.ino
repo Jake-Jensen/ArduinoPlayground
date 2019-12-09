@@ -7,7 +7,7 @@
 // Notes; DP/ EDP refer to the decimal segment
 // E** refers to the 7 segment 1 digit display
 // For instance, ETL is extra, top left segment
-// LED refers to the LED. 
+// LED refers to the LED.
 // D* refers to the digit place, on the 7 seg 4 dig, it looks like this:
 // [D1][D2][D3][D4]
 // Total schematic should look like
@@ -98,122 +98,12 @@ void LED_Off()
   digitalWrite(LED, LOW);
 }
 
-// The following functions all light up a specific number when called.
-// Be aware, SelectDigit(x) must be called first to specify the digit place to display.
-// E*** refers to the extra 7 segment 1 digit display
-// ***DEC refers to the 7 sgement 4 digit display, but the number also has the decimal pin lit.
-void Zero() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, LOW);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void One() {
-  digitalWrite(TOP, LOW);
-  digitalWrite(MID, LOW);
-  digitalWrite(BOT, LOW);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Two() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, LOW);
-  digitalWrite(DP, LOW);
-}
-
-void Three() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Four() {
-  digitalWrite(TOP, LOW);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, LOW);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Five() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, LOW);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Six() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, LOW);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Seven() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, LOW);
-  digitalWrite(BOT, LOW);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Eight() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Nine() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, LOW);
-}
-
-void Deci()
+// SelectDigit: The digit to display
+// UseDecimal: Show the decimal point
+// UseExternal: Show digit on external display
+void SelectDigit(int Digit, bool UseDecimal = false, bool UseExternal = false)
 {
+  // Deactivate the display to remove ghosting
   digitalWrite(TOP, LOW);
   digitalWrite(MID, LOW);
   digitalWrite(BOT, LOW);
@@ -221,11 +111,7 @@ void Deci()
   digitalWrite(TR, LOW);
   digitalWrite(BL, LOW);
   digitalWrite(BR, LOW);
-  digitalWrite(DP, HIGH);
-}
-
-void Off()
-{
+  digitalWrite(DP, LOW);
   digitalWrite(ETOP, LOW);
   digitalWrite(EMID, LOW);
   digitalWrite(EBOT, LOW);
@@ -234,272 +120,158 @@ void Off()
   digitalWrite(EBL, LOW);
   digitalWrite(EBR, LOW);
   digitalWrite(EDP, LOW);
-}
+  // Break the result and build the digit.
+  // Comparison check time is negligable, so no need to further optimize as time of execution never
+  // exceeds 4 milliseconds.
+  if (Digit == 0 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TL, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(BL, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 1 && UseExternal != true) {
+    digitalWrite(TR, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 2 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(MID, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(BL, HIGH);
+  }
+  if (Digit == 3 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(MID, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 4 && UseExternal != true) {
+    digitalWrite(MID, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(TL, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 5 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(MID, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TL, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 6 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(MID, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TL, HIGH);
+    digitalWrite(BL, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 7 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 8 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(MID, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TL, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(BL, HIGH);
+    digitalWrite(BR, HIGH);
+  }
+  if (Digit == 9 && UseExternal != true) {
+    digitalWrite(TOP, HIGH);
+    digitalWrite(MID, HIGH);
+    digitalWrite(BOT, HIGH);
+    digitalWrite(TL, HIGH);
+    digitalWrite(TR, HIGH);
+    digitalWrite(BR, HIGH);
+  }
 
-// External display
-void EZero() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, LOW);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, HIGH);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, HIGH);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
+  // External
+  if (Digit == 0 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETL, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBL, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 1 && UseExternal == true) {
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 2 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EMID, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBL, HIGH);
+  }
+  if (Digit == 3 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EMID, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 4 && UseExternal == true) {
+    digitalWrite(EMID, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(ETL, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 5 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EMID, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETL, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 6 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EMID, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETL, HIGH);
+    digitalWrite(EBL, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 7 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 8 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EMID, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETL, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBL, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
+  if (Digit == 9 && UseExternal == true) {
+    digitalWrite(ETOP, HIGH);
+    digitalWrite(EMID, HIGH);
+    digitalWrite(EBOT, HIGH);
+    digitalWrite(ETL, HIGH);
+    digitalWrite(ETR, HIGH);
+    digitalWrite(EBR, HIGH);
+  }
 
-void EOne() {
-  digitalWrite(ETOP, LOW);
-  digitalWrite(EMID, LOW);
-  digitalWrite(EBOT, LOW);
-  digitalWrite(ETL, LOW);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void ETwo() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, LOW);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, HIGH);
-  digitalWrite(EBR, LOW);
-  digitalWrite(EDP, LOW);
-}
-
-void EThree() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, LOW);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void EFour() {
-  digitalWrite(ETOP, LOW);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, LOW);
-  digitalWrite(ETL, HIGH);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void EFive() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, HIGH);
-  digitalWrite(ETR, LOW);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void ESix() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, HIGH);
-  digitalWrite(ETR, LOW);
-  digitalWrite(EBL, HIGH);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void ESeven() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, LOW);
-  digitalWrite(EBOT, LOW);
-  digitalWrite(ETL, LOW);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void EEight() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, HIGH);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, HIGH);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void ENine() {
-  digitalWrite(ETOP, HIGH);
-  digitalWrite(EMID, HIGH);
-  digitalWrite(EBOT, HIGH);
-  digitalWrite(ETL, HIGH);
-  digitalWrite(ETR, HIGH);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, HIGH);
-  digitalWrite(EDP, LOW);
-}
-
-void EDeci()
-{
-  digitalWrite(ETOP, LOW);
-  digitalWrite(EMID, LOW);
-  digitalWrite(EBOT, LOW);
-  digitalWrite(ETL, LOW);
-  digitalWrite(ETR, LOW);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, LOW);
-  digitalWrite(EDP, HIGH);
-}
-
-void EOff()
-{
-  digitalWrite(ETOP, LOW);
-  digitalWrite(EMID, LOW);
-  digitalWrite(EBOT, LOW);
-  digitalWrite(ETL, LOW);
-  digitalWrite(ETR, LOW);
-  digitalWrite(EBL, LOW);
-  digitalWrite(EBR, LOW);
-  digitalWrite(EDP, LOW);
-}
-
-void ZeroDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, LOW);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void OneDEC() {
-  digitalWrite(TOP, LOW);
-  digitalWrite(MID, LOW);
-  digitalWrite(BOT, LOW);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void TwoDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, LOW);
-  digitalWrite(DP, HIGH);
-}
-
-void ThreeDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void FourDEC() {
-  digitalWrite(TOP, LOW);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, LOW);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void FiveDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, LOW);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void SixDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, LOW);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void SevenDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, LOW);
-  digitalWrite(BOT, LOW);
-  digitalWrite(TL, LOW);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void EightDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, HIGH);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-void NineDEC() {
-  digitalWrite(TOP, HIGH);
-  digitalWrite(MID, HIGH);
-  digitalWrite(BOT, HIGH);
-  digitalWrite(TL, HIGH);
-  digitalWrite(TR, HIGH);
-  digitalWrite(BL, LOW);
-  digitalWrite(BR, HIGH);
-  digitalWrite(DP, HIGH);
-}
-
-// Debug testing, ignore.
-bool BreakTheLoop(bool Fuck) {
-  if (Fuck == true) {
-    return true;
-  } else {
-    return false;
+  // Decimal point
+  if (UseDecimal == true && UseExternal == true) {
+    digitalWrite(EDP, HIGH);
+  }
+  if (UseDecimal == true && UseExternal != true) {
+    digitalWrite(DP, HIGH);
   }
 }
-
-// The delay time value, unused.
-int DelayTime = 150;
-
-// The values being used. Redundant, as the values themselves could be used.
-int CurrentValue;
-int CurrentOne;
-int CurrentTwo;
-int CurrentThree;
-int CurrentFour;
-int CurrentExternal;
 
 // The amount of time to hold that value on the display before moving to the next. Keep below 4 to avoid flickering.
 int HoldTime = 3;
@@ -511,183 +283,173 @@ int SplitDisplay(int Value1, int Value2, int Value3, int Value4, int External)
 {
   Serial.println("Broken!");
   DigitSelect(0);
-  CurrentFour = Value4;
-  CurrentThree = Value3;
-  CurrentTwo = Value2;
-  CurrentOne = Value1;
-  CurrentExternal = External;
   delay(HoldTime);
   DigitSelect(1);
-  switch (CurrentOne) {
+  switch (Value1) {
     case 0:
-      Zero();
+      SelectDigit(0);
       break;
     case 1:
-      One();
+      SelectDigit(1);
       break;
     case 2:
-      Two();
+      SelectDigit(2);
       break;
     case 3:
-      Three();
+      SelectDigit(3);
       break;
     case 4:
-      Four();
+      SelectDigit(4);
       break;
     case 5:
-      Five();
+      SelectDigit(5);
       break;
     case 6:
-      Six();
+      SelectDigit(6);
       break;
     case 7:
-      Seven();
+      SelectDigit(7);
       break;
     case 8:
-      Eight();
+      SelectDigit(8);
       break;
     case 9:
-      Nine();
+      SelectDigit(9);
       break;
   }
   delay(HoldTime);
   DigitSelect(2);
-  switch (CurrentTwo) {
+  switch (Value2) {
     case 0:
-      Zero();
+      SelectDigit(0);
       break;
     case 1:
-      One();
+      SelectDigit(1);
       break;
     case 2:
-      Two();
+      SelectDigit(2);
       break;
     case 3:
-      Three();
+      SelectDigit(3);
       break;
     case 4:
-      Four();
+      SelectDigit(4);
       break;
     case 5:
-      Five();
+      SelectDigit(5);
       break;
     case 6:
-      Six();
+      SelectDigit(6);
       break;
     case 7:
-      Seven();
+      SelectDigit(7);
       break;
     case 8:
-      Eight();
+      SelectDigit(8);
       break;
     case 9:
-      Nine();
+      SelectDigit(9);
       break;
   }
   delay(HoldTime);
   DigitSelect(3);
-  switch (CurrentThree) {
+  switch (Value3) {
     case 0:
-      Zero();
+      SelectDigit(0);
       break;
     case 1:
-      One();
+      SelectDigit(1);
       break;
     case 2:
-      Two();
+      SelectDigit(2);
       break;
     case 3:
-      Three();
+      SelectDigit(3);
       break;
     case 4:
-      Four();
+      SelectDigit(4);
       break;
     case 5:
-      Five();
+      SelectDigit(5);
       break;
     case 6:
-      Six();
+      SelectDigit(6);
       break;
     case 7:
-      Seven();
+      SelectDigit(7);
       break;
     case 8:
-      Eight();
+      SelectDigit(8);
       break;
     case 9:
-      Nine();
+      SelectDigit(9);
       break;
   }
   delay(HoldTime);
   DigitSelect(4);
-  switch (CurrentFour) {
+  switch (Value4) {
     case 0:
-      ZeroDEC();
+      SelectDigit(0, true);
       break;
     case 1:
-      OneDEC();
+      SelectDigit(1, true);
       break;
     case 2:
-      TwoDEC();
+      SelectDigit(2, true);
       break;
     case 3:
-      ThreeDEC();
+      SelectDigit(3, true);
       break;
     case 4:
-      FourDEC();
+      SelectDigit(4, true);
       break;
     case 5:
-      FiveDEC();
+      SelectDigit(5, true);
       break;
     case 6:
-      SixDEC();
+      SelectDigit(6, true);
       break;
     case 7:
-      SevenDEC();
+      SelectDigit(7, true);
       break;
     case 8:
-      EightDEC();
+      SelectDigit(8, true);
       break;
     case 9:
-      NineDEC();
+      SelectDigit(9, true);
       break;
-
-      // Serial.println(CurrentOne);
-      // Serial.println(CurrentTwo);
-      // Serial.println(CurrentThree);
-      // Serial.println(CurrentFour);
   }
   delay(HoldTime);
-  switch (CurrentExternal) {
-        case 0:
-      EZero();
+  switch (External) {
+    case 0:
+      SelectDigit(0, false, true);
       break;
     case 1:
-      EOne();
+      SelectDigit(1, false, true);
       break;
     case 2:
-      ETwo();
+      SelectDigit(2, false, true);
       break;
     case 3:
-      EThree();
+      SelectDigit(3, false, true);
       break;
     case 4:
-      EFour();
+      SelectDigit(4, false, true);
       break;
     case 5:
-      EFive();
+      SelectDigit(5, false, true);
       break;
     case 6:
-      ESix();
+      SelectDigit(6, false, true);
       break;
     case 7:
-      ESeven();
+      SelectDigit(7, false, true);
       break;
     case 8:
-      EEight();
+      SelectDigit(8, false, true);
       break;
     case 9:
-      ENine();
+      SelectDigit(9, false, true);
       break;
   }
   delay(HoldTime);
@@ -701,23 +463,23 @@ int Val3;
 int Val4;
 int Val5;
 
-// The second workhorse of the program. 
+// The second workhorse of the program.
 // Calls millis(), splits the values into rank digits
 // eg 1234 becomes 1 2 3 4, or in our case, 4 3 2 1
 // Then calls the SplitDisplay() function with the values.
-// Some variables here are redundant or not used at all. 
+// Some variables here are redundant or not used at all.
 void HoldValue()
 {
   int Counter = 0;
   while (true) {
     // delay(5);
     ReadyToBreakTheLoop = true;
-      Val5 = millis() / 100 % 10;
-      Val4 = millis() / 1000 % 10;
-      Val3 = millis() / 10000 % 10;
-      Val2 = millis()  / 100000 % 10;
-      Val1 = millis() / 1000000 % 10;
-      SplitDisplay(Val1, Val2, Val3, Val4, Val5);
+    Val5 = millis() / 100 % 10;
+    Val4 = millis() / 1000 % 10;
+    Val3 = millis() / 10000 % 10;
+    Val2 = millis()  / 100000 % 10;
+    Val1 = millis() / 1000000 % 10;
+    SplitDisplay(Val1, Val2, Val3, Val4, Val5);
 
     ReadyToBreakTheLoop = false;
   }
